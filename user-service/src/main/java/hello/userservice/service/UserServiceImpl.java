@@ -2,9 +2,13 @@ package hello.userservice.service;
 
 import hello.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,5 +36,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long id) {
         return UserDto.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        hello.userservice.domain.User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        return new User(user.getEmail(), user.getEncryptedPwd(),
+                true,
+                true,
+                true,
+                true,
+                new ArrayList<>());
     }
 }
