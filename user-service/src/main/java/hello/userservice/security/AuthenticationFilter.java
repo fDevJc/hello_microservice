@@ -59,6 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = JWT.create()
                 .withSubject(userDto.getUserId())
+                .withClaim("username", userDto.getUserId())
                 .withExpiresAt(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
                 .sign(Algorithm.HMAC512(env.getProperty("token.secret")));
 
