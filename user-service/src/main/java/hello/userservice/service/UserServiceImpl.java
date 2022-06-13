@@ -39,6 +39,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUserByEmail(String email) {
+        return UserDto.of(userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found")));
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         hello.userservice.domain.User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
