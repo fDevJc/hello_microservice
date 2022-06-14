@@ -38,6 +38,12 @@ eureka:
 greeting:
   message: Welcome UserService
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
 #token:
 #  # 60 * 60 * 24 * 1000 하루
 #  expiration_time: 86400000

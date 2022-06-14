@@ -9,3 +9,20 @@ spring:
       server:
         git:
           uri: file:///Users/jicheol/study-inflearn/git-local-repo
+
+# uri: https://git 주소
+# private repository 일경우 아이디랑 패스워드를 설정할 수 있다.
+# username: [아이디]
+# password: [비밀번호]
+
+# native 물리 파일을 설정정보로 가져올 수 있다.
+#spring:
+#  application:
+#    name: config-service
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          search-locations: file://${user.home}/......파일경로
