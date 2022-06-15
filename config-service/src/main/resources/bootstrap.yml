@@ -1,0 +1,6 @@
+encrypt:
+#  key: key1
+  key-store:
+    location: file://${user.home}/study-inflearn/microservice/keystore/apiEncryptiongKey.jks
+    password: test1234
+    alias: apiEncryptionKey

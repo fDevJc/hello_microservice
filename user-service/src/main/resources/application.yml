@@ -4,11 +4,16 @@ server:
 spring:
   application:
     name: user-service
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/h2/db/microservice
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/h2/db/microservice
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
 #  h2:
 #    console:
 #      enabled: true
@@ -42,7 +47,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
 
 #token:
 #  # 60 * 60 * 24 * 1000 하루
