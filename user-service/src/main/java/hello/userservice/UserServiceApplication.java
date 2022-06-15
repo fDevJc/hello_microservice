@@ -1,5 +1,7 @@
 package hello.userservice;
 
+import feign.Logger;
+import hello.userservice.error.FeignErrorDecoder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -28,4 +30,14 @@ public class UserServiceApplication {
 //	public RestTemplate restTemplate() {
 //		return new RestTemplate();
 //	}
+
+	@Bean
+	public Logger.Level feignLoggerLevel() {
+		return Logger.Level.FULL;
+	}
+
+	@Bean
+	public FeignErrorDecoder feignErrorDecoder() {
+		return new FeignErrorDecoder();
+	}
 }

@@ -1,9 +1,11 @@
 package hello.userservice.service;
 
+import feign.FeignException;
 import hello.userservice.client.OrderServiceClient;
 import hello.userservice.controller.ResponseOrder;
 import hello.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -56,7 +59,16 @@ public class UserServiceImpl implements UserService {
 //        List<ResponseOrder> responseOrders = orderListResponse.getBody();
 
         //use open feign
-        List<ResponseOrder> responseOrders = orderServiceClient.getOrders(id);
+        List<ResponseOrder> responseOrders = null;
+
+//        try {
+//            responseOrders = orderServiceClient.getOrders(id);
+//        } catch (FeignException e) {
+//            log.error(e.getMessage());
+//        }
+
+        //error decoder를 이용하여 try 문장 삭제
+        responseOrders = orderServiceClient.getOrders(id);
 
         return UserDto.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")), responseOrders);
     }
