@@ -21,6 +21,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDto> getOrdersByUserId(Long userId) {
+        System.out.println("userId = " + userId);
         return orderRepository.findByUserId(userId).stream()
                 .map(OrderDto::of)
                 .collect(Collectors.toList());

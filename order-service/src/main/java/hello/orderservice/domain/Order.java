@@ -20,7 +20,7 @@ public class Order {
     private Integer totalPrice;
 
     @Column(nullable = false)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String orderId;

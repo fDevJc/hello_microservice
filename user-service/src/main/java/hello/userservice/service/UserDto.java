@@ -1,10 +1,12 @@
 package hello.userservice.service;
 
+import hello.userservice.controller.ResponseOrder;
 import hello.userservice.domain.User;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class UserDto {
@@ -15,12 +17,15 @@ public class UserDto {
     private LocalDateTime createAt;
     private String encryptedPwd;
 
+    private List<ResponseOrder> order;
+
     @Builder
-    private UserDto(String email, String name, String pwd, String userId) {
+    private UserDto(String email, String name, String pwd, String userId, List<ResponseOrder> orders) {
         this.email = email;
         this.name = name;
         this.pwd = pwd;
         this.userId = userId;
+        this.order = orders;
     }
 
     public static UserDto of(User userEntity) {
@@ -28,6 +33,15 @@ public class UserDto {
                 .email(userEntity.getEmail())
                 .name(userEntity.getName())
                 .userId(userEntity.getUserId())
+                .build();
+    }
+
+    public static UserDto of(User userEntity, List<ResponseOrder> orders) {
+        return UserDto.builder()
+                .email(userEntity.getEmail())
+                .name(userEntity.getName())
+                .userId(userEntity.getUserId())
+                .orders(orders)
                 .build();
     }
 
