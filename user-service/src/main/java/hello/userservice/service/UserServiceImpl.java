@@ -1,5 +1,6 @@
 package hello.userservice.service;
 
+import hello.userservice.client.OrderServiceClient;
 import hello.userservice.controller.ResponseOrder;
 import hello.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,10 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RestTemplate restTemplate;
     private final Environment env;
+
+    //    private final RestTemplate restTemplate;
+    private final OrderServiceClient orderServiceClient;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -44,11 +47,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long id) {
         String orderUrl = String.format(env.getProperty("order_service.url"), id);
-        ResponseEntity<List<ResponseOrder>> orderListResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<ResponseOrder>>() {
-                }
-        );
-        List<ResponseOrder> responseOrders = orderListResponse.getBody();
+
+        //use rest template
+//        ResponseEntity<List<ResponseOrder>> orderListResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+//                new ParameterizedTypeReference<List<ResponseOrder>>() {
+//                }
+//        );
+//        List<ResponseOrder> responseOrders = orderListResponse.getBody();
+
+        //use open feign
+        List<ResponseOrder> responseOrders = orderServiceClient.getOrders(id);
+
         return UserDto.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")), responseOrders);
     }
 
