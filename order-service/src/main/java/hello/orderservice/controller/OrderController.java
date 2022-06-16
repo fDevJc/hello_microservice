@@ -1,5 +1,7 @@
 package hello.orderservice.controller;
 
+import hello.orderservice.messagequeue.KafkaProducer;
+import hello.orderservice.service.OrderDto;
 import hello.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final OrderService orderService;
     private final Environment env;
+    private final KafkaProducer kafkaProducer;
 
     @GetMapping("/health_check")
     public String status() {
@@ -24,7 +27,13 @@ public class OrderController {
 
     @PostMapping("/{userId}/orders")
     public ResponseEntity<ResponseOrder> createOrder(@PathVariable Long userId, @RequestBody RequestOrder requestOrder) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseOrder.of(orderService.createOrder(userId, requestOrder.toDto())));
+        OrderDto orderDto = requestOrder.toDto();
+        ResponseOrder responseOrder = ResponseOrder.of(orderService.createOrder(userId, orderDto));
+
+        //send this order to the kafka
+        kafkaProducer.send("example-catalog-topic", orderDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
     }
 
     @GetMapping("/{userId}/orders")
