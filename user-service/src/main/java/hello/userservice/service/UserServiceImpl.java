@@ -76,8 +76,10 @@ public class UserServiceImpl implements UserService {
 
         //use circuit breaker
 
+        log.info("Before call orders microservice");
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         responseOrders = circuitbreaker.run(() -> orderServiceClient.getOrders(id), throwable -> new ArrayList<>());
+        log.info("After call orders microservice");
 
         return UserDto.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")), responseOrders);
     }
