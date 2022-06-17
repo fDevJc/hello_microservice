@@ -6,6 +6,8 @@ import hello.userservice.controller.ResponseOrder;
 import hello.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -29,6 +31,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Environment env;
+
+    CircuitBreakerFactory circuitBreakerFactory;
 
     //    private final RestTemplate restTemplate;
     private final OrderServiceClient orderServiceClient;
@@ -68,7 +72,12 @@ public class UserServiceImpl implements UserService {
 //        }
 
         //error decoder를 이용하여 try 문장 삭제
-        responseOrders = orderServiceClient.getOrders(id);
+//        responseOrders = orderServiceClient.getOrders(id);
+
+        //use circuit breaker
+
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
+        responseOrders = circuitbreaker.run(() -> orderServiceClient.getOrders(id), throwable -> new ArrayList<>());
 
         return UserDto.of(userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found")), responseOrders);
     }

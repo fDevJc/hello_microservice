@@ -53,7 +53,7 @@ public class OrderController {
 
         //sink-connect 추가
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseOrder.of(orderDto););
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseOrder.of(orderDto));
     }
 
     @GetMapping("/{userId}/orders")
