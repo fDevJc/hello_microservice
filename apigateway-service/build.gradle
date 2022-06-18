@@ -31,6 +31,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.77.Final:osx-aarch_64'
 
 	// https://mvnrepository.com/artifact/com.auth0/java-jwt

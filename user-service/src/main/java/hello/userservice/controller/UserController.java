@@ -1,6 +1,7 @@
 package hello.userservice.controller;
 
 import hello.userservice.service.UserService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -20,6 +21,7 @@ public class UserController {
     @Value("${greeting.message}")
     String message;
 
+    @Timed(value = "users.status", longTask = true)
     @GetMapping("/health_check")
     public String status() {
         String result = "It's working in UserService" +
@@ -31,6 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/welcome")
+    @Timed(value = "users.welcome", longTask = true)
     public String welcome() {
         return message;
     }
